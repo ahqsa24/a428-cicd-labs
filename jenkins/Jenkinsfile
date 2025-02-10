@@ -1,6 +1,6 @@
 node {
     stage('Checkout') {
-        git branch: 'react-app', url: 'https://github.com/username-anda/a428-cicd-labs.git'
+        git branch: 'react-app', url: 'https://github.com/ahqsa24/a428-cicd-labs.git'
     }
 
     stage('Install Dependencies') {
