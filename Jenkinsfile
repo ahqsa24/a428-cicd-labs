@@ -1,15 +1,21 @@
-pipeline {
-    agent {
-        docker {
-            image 'node:16-buster-slim' 
-            args '-p 3000:3000' 
-        }
+node {
+    stage('Checkout') {
+        git branch: 'react-app', url: 'https://github.com/ahqsa24/a428-cicd-labs.git'
     }
-    stages {
-        stage('Build') { 
-            steps {
-                sh 'npm install'
-            }
-        }
+
+    stage('Install Dependencies') {
+        sh 'npm install'
+    }
+
+    stage('Build') {
+        sh 'npm run build'
+    }
+
+    stage('Test') {
+        sh 'npm test'
+    }
+
+    stage('Deploy') {
+        echo 'Deploying application...'
     }
 }
