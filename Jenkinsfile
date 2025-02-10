@@ -1,21 +1,30 @@
-node {
-    stage('Checkout') {
-        git branch: 'react-app', url: 'https://github.com/ahqsa24/a428-cicd-labs.git'
+pipeline {
+    agent {
+        docker {
+            image 'node:lts-buster-slim'
+            args '-p 3000:3000'
+        }
     }
-
-    stage('Install Dependencies') {
-        sh 'npm install'
+    environment {
+        CI = 'true'
     }
-
-    stage('Build') {
-        sh 'npm run build'
-    }
-
-    stage('Test') {
-        sh 'npm test'
-    }
-
-    stage('Deploy') {
-        echo 'Deploying application...'
+    stages {
+        stage('Build') {
+            steps {
+                sh 'npm install'
+            }
+        }
+        stage('Test') {
+            steps {
+                sh './jenkins/scripts/test.sh'
+            }
+        }
+        stage('Deliver') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+                input message: 'Finished using the website? (Click "Proceed" to continue)'
+                sh './jenkins/scripts/kill.sh'
+            }
+        }
     }
 }
